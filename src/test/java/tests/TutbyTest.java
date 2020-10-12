@@ -1,20 +1,27 @@
 package tests;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import settings.ScreenConfig;
 import settings.ScreenSettings;
 import actions.Steps;
 import actions.Utils;
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import settings.BrowserConfig;
 import web.driver.Driver;
+import web.pages.AfishaPage;
+import web.pages.MainTutPage;
 
 
-public class AppleOnlinerTest {
+public class TutbyTest {
     private WebDriver driver;
-    private static String addressSite = "https://onliner.by";
+    private static String tutAddress = "https://tut.by";
+    private static AfishaPage afishaPage;
+    private static MainTutPage mainTutPage;
+    WebDriverWait wait;
+
     private static final String USERNAME_XPATH = "//a[@href='https://catalog.onliner.by/']";
     private static final String ELECTRONIC_XPATH = "//li[@data-id='1']";
     private static final String PHONES_MENU_XPATH = "//div[contains(text(), 'Мобильные')]";
@@ -29,12 +36,21 @@ public class AppleOnlinerTest {
         Driver.initDriver(BrowserConfig.CHROME);
         driver = Driver.getDriver();
         ScreenSettings.setScreenMode(ScreenConfig.FULL_SCREEN, driver);
-        driver.get(addressSite);
+        afishaPage = new AfishaPage(driver);
+        mainTutPage = new MainTutPage(driver);
+        driver.get(tutAddress);
         Utils.setTimeOuts(driver);
+        wait = new WebDriverWait (driver, 15);
     }
 
     @Test
-    public void applePriceOnlinerTest() {
+    public void Scenario1() {
+        mainTutPage.goToAfisha();
+
+
+
+        wait.until(ExpectedConditions.titleIs("Software Testing Material - A site for Software Testers"));
+
         Steps.findElementAndClick(driver,USERNAME_XPATH);
         Steps.findElementAndClick(driver, ELECTRONIC_XPATH);
         Steps.findElementAndClick(driver, PHONES_MENU_XPATH);
