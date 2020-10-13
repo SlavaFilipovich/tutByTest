@@ -2,6 +2,7 @@ package web.pages;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,11 +12,13 @@ import java.util.List;
 
 public class AfishaPage extends InitializingPage{
 
+    private String genreXpath = "//div[@id='tab-films']//select/option[text()= %s]";
+
     @FindBy(xpath = "//*[contains(text(), 'Онлайн-кинотеатры')]")
     private WebElement onlineCinemas;
 
-    @FindBy(xpath = "//button[@type = 'reset' and @opacity]")
-    private WebElement buttonSearch;
+    @FindBy(xpath = "//div[@id='tab-films']//*[contains(text(), 'Жанры')]")
+    private WebElement genresOption;
 
     @FindBy(xpath = "//input[@type = 'email']")
     private WebElement loginField;
@@ -34,19 +37,23 @@ public class AfishaPage extends InitializingPage{
     }
 
     public void goToOnlineCinemas(){
+        LOGGER.debug("Go to afisha.tut.by/online-cinema");
         actions.moveToElement(onlineCinemas).click().perform();
     }
 
+    public void goToGenres(){
+        LOGGER.debug("Click menu Genres");
+        actions.moveToElement(genresOption).click().perform();
+    }
 
-    public void searchFilms(String word) throws InterruptedException {
-        LOGGER.debug("Searching films by name...");
-        actions.moveToElement(resetButtons.get(1))
-                .moveToElement(searchingField)
-                .click()
-                .sendKeys(word)
-                .sendKeys(Keys.ENTER)
-                .build().perform();
-        Thread.sleep(3000);
+    public void chooseParticularGenre(String word){
+        driver.findElement(By.xpath(String.format(genreXpath, word))).click();
+    }
+
+    public boolean elementIsDisplayed(String xpath, String word){
+        WebElement element = driver.findElement(By.xpath(xpath));
+        LOGGER.info(element.getText());
+        return element.getText().contains(word);
     }
 
 
