@@ -1,6 +1,6 @@
 package web.driver;
 
-import settings.BrowserConfig;
+import web.settings.BrowserConfig;
 import org.openqa.selenium.WebDriver;
 
 
