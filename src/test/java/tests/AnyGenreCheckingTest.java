@@ -2,6 +2,8 @@ package tests;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -21,12 +23,11 @@ public class AnyGenreCheckingTest {
     private WebDriver driver;
     private static String tutAddress = "https://tut.by";
     private static String requiredGenre = "Комедия";
-    private static String checkGenres_Xpath = "//div[@id='online-cinema']//ul[1]/li[1]/div//*[contains(text(), %s)]";
-    private static String selectionElement = "//optgroup/option[text()='Комедия']";
-    private static String filmDescription = "//div[@id='online-cinema']//ul[1]/li[1]/div";
+    private static String checkSelection_Xpath = "//ul[@class='check-list']/li";
+    private static String listOfFilms = "//div[@id='online-cinema']";
+    private static String filmDescription = "//div[@id='online-cinema']//ul[1]/li[1]/div/p";
     private static AfishaPage afishaPage;
     private static MainTutPage mainTutPage;
-    WebDriverWait wait;
 
     private static final Logger LOGGER = LogManager.getLogger(AnyGenreCheckingTest.class);
 
@@ -41,16 +42,15 @@ public class AnyGenreCheckingTest {
         mainTutPage = new MainTutPage(driver);
         driver.get(tutAddress);
         Utils.setTimeOuts(driver);
-        wait = new WebDriverWait (driver, 15);
     }
 
     @Test
     public void Scenario1() {
         mainTutPage.goToAfisha();
         afishaPage.goToOnlineCinemas();
+        WebElement list = driver.findElement(By.xpath(listOfFilms));
         afishaPage.chooseGenresInFilms(requiredGenre);
-        wait.until(ExpectedConditions.elementToBeSelected(
-                By.xpath(String.format("//div[@id='tab-films']//select/option[text()= %s]", requiredGenre))));
+        (new WebDriverWait (driver, 15)).until(ExpectedConditions.refreshed((ExpectedConditions.visibilityOf(list)))); //.numberOfElementsToBeMoreThan(By.xpath(checkSelection_Xpath), 0));
         Assert.assertTrue(afishaPage.elementIsDisplayed(filmDescription, requiredGenre));
 
     }

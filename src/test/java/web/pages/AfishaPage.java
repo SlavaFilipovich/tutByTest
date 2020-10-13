@@ -12,7 +12,7 @@ public class AfishaPage extends InitializingPage{
 
     private static String filmGenre_Xpath = "//div[@id='tab-films']//ul//*[contains(text(),'%s')]";
     private static String serialGenre_Xpath = "//div[@id='tab-tv-series']//ul//*[contains(text(),'%s')]";
-    private static String animationGenre_Xpath = "//div[@id='tab-animation']//ul//*[contains(text(),'%s')]";
+    private static String animationGenre_Xpath = "//div[@id='tab-cartoons']//ul//*[contains(text(),'%s')]";
 
     @FindBy(xpath = "//*[contains(text(), 'Онлайн-кинотеатры')]")
     private WebElement onlineCinemas;
@@ -23,7 +23,7 @@ public class AfishaPage extends InitializingPage{
     @FindBy(xpath = "//div[@id='tab-tv-series']//*[contains(text(), 'Жанры')]")
     private WebElement genresOption2;
 
-    @FindBy(xpath = "//div[@id='tab-animation']//*[contains(text(), 'Жанры')]")
+    @FindBy(xpath = "//div[@id='tab-cartoons']//*[contains(text(), 'Жанры')]")
     private WebElement genresOption3;
 
     @FindBy(xpath = "//a[@data-show='serial']")
@@ -51,12 +51,12 @@ public class AfishaPage extends InitializingPage{
 
     public void switchToAnimationTab(){
         LOGGER.debug("Switch to animation tab");
-        actions.moveToElement(animationTab).click().perform();
+        actions.moveToElement(animationTab).click().build().perform();
     }
 
     public void chooseGenresInFilms(String word){
         LOGGER.debug("Click menu Genres");
-        actions.moveToElement(genresOption1).click().perform();
+        actions.moveToElement(genresOption1).click().build().perform();
         LOGGER.debug("Choosing genre "+word);
         driver.findElement(By.xpath(String.format(filmGenre_Xpath, word))).click();
     }
@@ -70,7 +70,7 @@ public class AfishaPage extends InitializingPage{
 
     public void chooseGenresInAnimation(String word){
         LOGGER.debug("Click menu Genres");
-        actions.moveToElement(genresOption3).click().perform();
+        actions.moveToElement(genresOption3).click().build().perform();
         LOGGER.debug("Choosing genre "+word);
         driver.findElement(By.xpath(String.format(animationGenre_Xpath, word))).click();
     }

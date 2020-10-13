@@ -2,6 +2,7 @@ package tests;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.WebElement;
 import utils.Utils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,11 +21,11 @@ import web.settings.ScreenSettings;
 public class AnimationCheckingTest {
     private WebDriver driver;
     private static String afishaTutAddress = "https://afisha.tut.by/online-cinema/";
-    private static String requiredGenre = "Комедия";
-    private static String checkGenres_Xpath = "//div[@id='online-cinema']//ul[1]/li[1]/div//*[contains(text(), %s)]";
-    private static String filmDescription = "//div[@id='online-cinema']//ul[1]/li[1]/div";
+    private static String requiredGenre = "Драма";
+    private static String listOfFilms = "//div[@id='online-cinema']";
+    private static String checkSelection_Xpath = "//ul[@class='check-list']/li";
+    private static String filmDescription = "//div[@id='online-cinema']//ul[1]/li[1]/div/p";
     private static AfishaPage afishaPage;
-    WebDriverWait wait;
 
     private static final Logger LOGGER = LogManager.getLogger(AnimationCheckingTest.class);
 
@@ -38,15 +39,14 @@ public class AnimationCheckingTest {
         afishaPage = new AfishaPage(driver);
         driver.get(afishaTutAddress);
         Utils.setTimeOuts(driver);
-        wait = new WebDriverWait (driver, 15);
     }
 
     @Test
     public void Scenario3() {
         afishaPage.switchToAnimationTab();
+        WebElement list = driver.findElement(By.xpath(listOfFilms));
         afishaPage.chooseGenresInAnimation(requiredGenre);
-        wait.until(ExpectedConditions.elementToBeSelected(
-                By.xpath(String.format("//div[@id='tab-animation']//select/option[text()= %s]", requiredGenre))));
+        (new WebDriverWait (driver, 15)).until(ExpectedConditions.refreshed((ExpectedConditions.visibilityOf(list))));
         Assert.assertTrue(afishaPage.elementIsDisplayed(filmDescription, requiredGenre));
 
     }
